@@ -10,16 +10,22 @@ def VARIANT = "DEFAULT"
 parallel (
     "EH7":{
         node {
+			tools {nodejs "node"}
         	def LABEL = "EH7"
         	def HOST = "eccides7.wdf.sap.com"
         	def CREDENTIAL = "EH7"
         	
         	git poll: true, branch: BRANCH, url: GITURL
         		
+			stage('install newman'){
+				steps{
+					sh 'npm install newman'
+				}
+			}
         	stage('[' + LABEL + '] Preparation') {
         		deleteDir()
         		dir('sap-pipeline') {
-        			bat "git clone " + PIPELINE_GITURL + " ."
+        			git PIPELINE_GITURL
         		}
         	}
         	
